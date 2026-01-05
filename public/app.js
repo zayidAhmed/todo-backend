@@ -2,6 +2,22 @@ const BASE_URL = "https://todo-backend-f8o4.onrender.com";
 
 let token = null; // store JWT token after login
 
+
+// ---------- Toggle login/register ----------
+const loginDiv = document.getElementById('loginDiv');
+const registerDiv = document.getElementById('registerDiv');
+
+document.getElementById('showRegister').addEventListener('click', () => {
+    loginDiv.style.display = 'none';
+    registerDiv.style.display = 'block';
+});
+
+document.getElementById('showLogin').addEventListener('click', () => {
+    registerDiv.style.display = 'none';
+    loginDiv.style.display = 'block';
+});
+
+
 // ------------------- Register -------------------
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
