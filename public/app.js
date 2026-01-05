@@ -2,6 +2,17 @@ const BASE_URL = "https://todo-backend-f8o4.onrender.com";
 
 let token = null; // store JWT token after login
 
+// Load token from localStorage if it exists
+const savedToken = localStorage.getItem('todoToken');
+if (savedToken) {
+    token = savedToken;
+    loginDiv.style.display = 'none';
+    registerDiv.style.display = 'none';
+    document.getElementById('todoDiv').style.display = 'block';
+    fetchTodos();
+}
+
+
 
 // ---------- Toggle login/register ----------
 const loginDiv = document.getElementById('loginDiv');
@@ -48,13 +59,16 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const data = await res.json();
     if (data.token) {
         token = data.token;
-        document.getElementById('loginDiv').style.display = 'none';
-        document.getElementById('registerDiv').style.display = 'none';
+        // Save token in localStorage so it persists
+        localStorage.setItem('todoToken', token);
+        loginDiv.style.display = 'none';
+        registerDiv.style.display = 'none';
         document.getElementById('todoDiv').style.display = 'block';
         fetchTodos();
     } else {
         alert(data.message || 'Login failed');
     }
+
 });
 
 // ------------------- Add To-Do -------------------
@@ -101,7 +115,9 @@ async function fetchTodos() {
 // ------------------- Logout -------------------
 document.getElementById('logoutBtn').addEventListener('click', () => {
     token = null;
-    document.getElementById('loginDiv').style.display = 'block';
-    document.getElementById('registerDiv').style.display = 'block';
+    localStorage.removeItem('todoToken'); // clear stored token
+    loginDiv.style.display = 'block';
+    registerDiv.style.display = 'none';
     document.getElementById('todoDiv').style.display = 'none';
 });
+
