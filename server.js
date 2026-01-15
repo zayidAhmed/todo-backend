@@ -37,6 +37,10 @@ app.get('/', (req, res) => {
     res.send('Backend is ready!');
 });
 
+app.get('/healthz', (req, res) => {
+    res.status(200).send('OK');
+});
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
