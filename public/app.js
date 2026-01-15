@@ -1,4 +1,6 @@
-const BASE_URL = "https://todo-backend-f8o4.onrender.com";
+// Use relative path for API calls. This works for both localhost (http://localhost:5000)
+// and production (https://your-app.onrender.com) because the frontend is served by the backend.
+const BASE_URL = "";
 
 let token = null; // store JWT token after login
 
@@ -80,7 +82,7 @@ document.getElementById('todoForm').addEventListener('submit', async (e) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ title: document.getElementById('todoInput').value })
+        body: JSON.stringify({ text: document.getElementById('todoInput').value })
     });
     const data = await res.json();
     document.getElementById('todoInput').value = '';
@@ -97,7 +99,7 @@ async function fetchTodos() {
     ul.innerHTML = '';
     todos.forEach(todo => {
         const li = document.createElement('li');
-        li.textContent = todo.title;
+        li.textContent = todo.text;
         const del = document.createElement('button');
         del.textContent = 'Delete';
         del.onclick = async () => {
