@@ -85,8 +85,12 @@ document.getElementById('todoForm').addEventListener('submit', async (e) => {
         body: JSON.stringify({ text: document.getElementById('todoInput').value })
     });
     const data = await res.json();
-    document.getElementById('todoInput').value = '';
-    fetchTodos();
+    if (res.ok) {
+        document.getElementById('todoInput').value = '';
+        fetchTodos();
+    } else {
+        alert(data.message || 'Failed to add task');
+    }
 });
 
 // ------------------- Fetch To-Dos -------------------
@@ -99,15 +103,25 @@ async function fetchTodos() {
     ul.innerHTML = '';
     todos.forEach(todo => {
         const li = document.createElement('li');
-        li.textContent = todo.text;
+        li.className = 'todo-item'; // Add class for styling
+
+        const span = document.createElement('span');
+        span.textContent = todo.text;
+        li.appendChild(span);
+
         const del = document.createElement('button');
         del.textContent = 'Delete';
+        del.className = 'delete-btn'; // Add class for styling
         del.onclick = async () => {
-            await fetch(`${BASE_URL}/api/todos/${todo._id}`, {
+            const res = await fetch(`${BASE_URL}/api/todos/${todo._id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            fetchTodos();
+            if (res.ok) {
+                fetchTodos();
+            } else {
+                alert('Failed to delete task');
+            }
         };
         li.appendChild(del);
         ul.appendChild(li);
