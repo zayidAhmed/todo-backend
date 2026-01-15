@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Header / Logo -->
@@ -56,7 +58,7 @@
         <div id="todoDiv" class="todo-container fade-in" style="display: none;">
             <div class="user-header">
                 <h3>Your List</h3>
-                <button id="logoutBtn" class="btn btn-outline">Log Out</button>
+                <button id="showProfileBtn" class="btn btn-outline">Profile</button>
             </div>
 
             <form id="todoForm" class="todo-form">
@@ -68,8 +70,46 @@
                 <!-- Todo items will be injected here -->
             </ul>
         </div>
+
+        <!-- Profile Section -->
+        <div id="profileDiv" class="auth-card fade-in" style="display: none;">
+            <div class="user-header">
+                <h3>My Profile</h3>
+                <button id="backToTodoBtn" class="btn btn-outline">Back</button>
+            </div>
+
+            <div class="profile-details">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="profileName" readonly>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="profileEmail" readonly>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--surface-border); margin: 1.5rem 0;">
+
+            <h3>Change Password</h3>
+            <form id="passwordForm">
+                <div class="input-group">
+                    <input type="password" id="currentPassword" placeholder="Current Password" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="newPassword" placeholder="New Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Password</button>
+            </form>
+
+            <div style="margin-top: 2rem;">
+                <button id="logoutBtn" class="btn btn-outline"
+                    style="width: 100%; border-color: var(--danger-color); color: var(--danger-color);">Log Out</button>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
 </body>
+
 </html>

@@ -11,6 +11,7 @@ router.post('/register', async (req, res) => {
 
         // Create user object
         const user = new User({
+            username: req.body.username,
             email: req.body.email,
             password: hashedPassword
         });
@@ -37,6 +38,37 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
         res.json({ token });
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// GET CURRENT USER (Protected)
+router.get('/me', require('../middleware/authMiddleware'), async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select('-password'); // returns everything except password
+        res.json(user);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// CHANGE PASSWORD
+router.put('/password', require('../middleware/authMiddleware'), async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const user = await User.findById(req.userId);
+
+        // Verify current password
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) return res.status(400).json({ message: 'Incorrect current password' });
+
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        res.json({ message: 'Password updated successfully' });
     } catch (err) {
         res.status(500).json(err);
     }

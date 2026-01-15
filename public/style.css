@@ -25,18 +25,21 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Prevent background scroll */
+    overflow: hidden;
+    /* Prevent background scroll */
 }
 
 .app-container {
     width: 100%;
     max-width: 480px;
     height: 100%;
-    max-height: 900px; /* On large screens, limit height */
+    max-height: 900px;
+    /* On large screens, limit height */
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Scroll simple content */
+    overflow-y: auto;
+    /* Scroll simple content */
 }
 
 /* Header */
@@ -50,6 +53,7 @@ header h1 {
     font-size: 2rem;
     margin-bottom: 0.5rem;
     background: linear-gradient(to right, #818cf8, #c084fc);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -58,8 +62,16 @@ header p {
     color: var(--text-muted);
 }
 
+label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    color: var(--text-muted);
+}
+
 /* Cards (Auth & Todo) */
-.auth-card, .todo-container {
+.auth-card,
+.todo-container {
     background: var(--surface-color);
     backdrop-filter: blur(10px);
     border: 1px solid var(--surface-border);
@@ -218,8 +230,15 @@ input:focus {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Mobile Responsiveness */
@@ -227,7 +246,7 @@ input:focus {
     .app-container {
         padding: 1rem;
     }
-    
+
     header h1 {
         font-size: 1.5rem;
     }

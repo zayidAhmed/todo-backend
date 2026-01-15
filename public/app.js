@@ -5,13 +5,37 @@ const BASE_URL = "";
 let token = null; // store JWT token after login
 
 // Load token from localStorage if it exists
+// Load token from localStorage if it exists
 const savedToken = localStorage.getItem('todoToken');
 if (savedToken) {
     token = savedToken;
-    loginDiv.style.display = 'none';
-    registerDiv.style.display = 'none';
-    document.getElementById('todoDiv').style.display = 'block';
-    fetchTodos();
+    validateToken(); // Verify if token is still valid
+}
+
+// Check if token is valid by fetching user details
+async function validateToken() {
+    try {
+        const res = await fetch(`${BASE_URL}/api/auth/me`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+            const user = await res.json();
+            loginDiv.style.display = 'none';
+            registerDiv.style.display = 'none';
+            document.getElementById('todoDiv').style.display = 'block';
+
+            // Populate profile
+            document.getElementById('profileName').value = user.username;
+            document.getElementById('profileEmail').value = user.email;
+
+            fetchTodos();
+        } else {
+            // Token invalid or expired
+            throw new Error('Invalid token');
+        }
+    } catch (err) {
+        logout();
+    }
 }
 
 
@@ -129,11 +153,52 @@ async function fetchTodos() {
 }
 
 // ------------------- Logout -------------------
-document.getElementById('logoutBtn').addEventListener('click', () => {
+// ------------------- Navigation & Profile -------------------
+const profileDiv = document.getElementById('profileDiv');
+const todoDiv = document.getElementById('todoDiv');
+
+document.getElementById('showProfileBtn').addEventListener('click', () => {
+    todoDiv.style.display = 'none';
+    profileDiv.style.display = 'block';
+});
+
+document.getElementById('backToTodoBtn').addEventListener('click', () => {
+    profileDiv.style.display = 'none';
+    todoDiv.style.display = 'block';
+});
+
+document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+
+    const res = await fetch(`${BASE_URL}/api/auth/password`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ currentPassword, newPassword })
+    });
+
+    const data = await res.json();
+    alert(data.message || (res.ok ? 'Password updated!' : 'Update failed'));
+
+    if (res.ok) {
+        document.getElementById('passwordForm').reset();
+    }
+});
+
+
+// ------------------- Logout -------------------
+function logout() {
     token = null;
     localStorage.removeItem('todoToken'); // clear stored token
     loginDiv.style.display = 'block';
     registerDiv.style.display = 'none';
-    document.getElementById('todoDiv').style.display = 'none';
-});
+    todoDiv.style.display = 'none';
+    profileDiv.style.display = 'none';
+}
+
+document.getElementById('logoutBtn').addEventListener('click', logout);
 
